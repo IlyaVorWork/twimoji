@@ -7,14 +7,11 @@ import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const {data, isLoading} = api.post.getAll.useQuery();
+  const user = useUser();
 
   if (isLoading) return <div>Загрузка...</div>
 
   if (!data) return <div>Что-то пошло не так</div>
-
-  console.log(data)
-
-  const user = useUser();
 
   return (
     <>
