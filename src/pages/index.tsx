@@ -1,13 +1,16 @@
-import { SignIn, SignInButton, SignOutButton, SignUp, SignUpButton, useUser } from "@clerk/nextjs";
+import { SignIn, SignInButton, SignOutButton, SignUpButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
+import CreatePost from "~/components/CreatePost";
 
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const {data} = api.post.getAll.useQuery();
+  const {data, isLoading} = api.post.getAll.useQuery();
 
-  if (!data) return <div>Загрузка...</div>
+  if (isLoading) return <div>Загрузка...</div>
+
+  if (!data) return <div>Что-то пошло не так</div>
 
   console.log(data)
 
@@ -29,10 +32,15 @@ const Home: NextPage = () => {
                 <SignInButton />
               </div>
             )}
-            {!!user.isSignedIn && <SignOutButton />}
+            {!!user.isSignedIn && (
+              <div className="flex">
+                {/*<SignOutButton />*/}
+                <CreatePost/>
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
-            {data?.map((post) => (
+            {data?.map(({post, author}) => (
               <div key={post.id} className="p-8 border-b border-slate-400">{post.content}</div>
             ))}
           </div>
